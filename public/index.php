@@ -61,7 +61,7 @@ if ($uriArray[1] === 'api' && $uriArray[2] === 'users' && $_SERVER['REQUEST_METH
 //post routes 
 if ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = isset($uriArray[3]) ? intval($uriArray[3]) : null;
-    $postController = new PostsController();
+    $postController = new PostController();
 
     if ($id) {
         $postController->getPostByID($id);
@@ -124,6 +124,11 @@ if ($uriArray[1] === 'posts-update' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($uriArray[1] === 'posts-delete' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $postController = new PostsController();
     $postController->postsDeleteView();
+}
+
+if ($uriArray[1] === 'posts-view' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $postController = new PostsController();
+    $postController->postsView();
 }
 
 
