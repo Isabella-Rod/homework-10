@@ -42,7 +42,12 @@ class PostsController
     }
 
     public function getAllPosts() {
-        $postModel = new Post();
+        $id = null;
+        $title = '';
+        $content = '';
+        $created_at = null;
+        $updated_at = null;
+        $postModel = new Posts($id, $title, $content, $created_at, $updated_at);
         header("Content-Type: application/json");
         $posts = $postModel->getAllPosts();
         echo json_encode($posts);
@@ -50,10 +55,10 @@ class PostsController
     }
 
     public function getPostByID($id) {
-        $postModel = new Post();
+        $postModel = new Posts($id, $title, $content, $created_at, $updated_at);
         header("Content-Type: application/json");
-        $post = $postModel->getPostById($id);
-        echo json_encode($post);
+        $posts = $postModel->getPostById($id);
+        echo json_encode($posts);
         exit();
     }
 
@@ -64,7 +69,7 @@ class PostsController
         ];
         $postData = $this->validatePost($inputData);
 
-        $post = new Post();
+        $post = new Posts($id, $title, $content, $created_at, $updated_at);
         $post->savePost(
             [
                 'title' => $postData['title'],
@@ -93,7 +98,7 @@ class PostsController
         ];
         $postData = $this->validatePost($inputData);
 
-        $post = new Post();
+        $post = new Posts($id, $title, $content, $created_at, $updated_at);
         $post->updatePost(
             [
                 'id' => $id,
@@ -115,7 +120,7 @@ class PostsController
             exit();
         }
 
-        $post = new Post();
+        $post = new Posts($id, $title, $content, $created_at, $updated_at);
         $post->deletePost(
             [
                 'id' => $id,
