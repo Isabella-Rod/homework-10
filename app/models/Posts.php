@@ -1,5 +1,7 @@
 <?php
 
+namespace app\models; 
+
 class Posts {
     private $id;
     private $title;
@@ -13,6 +15,10 @@ class Posts {
         $this->content = $content;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+    }
+
+    public function getAllPosts() {
+        return [];
     }
 
     public function getId() {
