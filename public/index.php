@@ -1,4 +1,5 @@
 <?php
+
 require_once "../app/models/Model.php";
 require_once "../app/models/User.php";
 require_once "../app/controllers/UserController.php";
@@ -23,7 +24,6 @@ $uriArray = explode("/", $uri);
 //0 = ""
 //1 = users
 //2 = 1
-
 
 //get all or a single user
 if ($uriArray[1] === 'api' && $uriArray[2] === 'users' && $_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -61,30 +61,27 @@ if ($uriArray[1] === 'api' && $uriArray[2] === 'users' && $_SERVER['REQUEST_METH
 //post routes 
 if ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = isset($uriArray[3]) ? intval($uriArray[3]) : null;
-    $postController = new PostController();
+    $postsController = new PostsController();
 
     if ($id) {
-        $postController->getPostByID($id);
+        $postsController->getPostByID($id);
     } else {
-        $postController->getAllPosts();
+        $postsController->getAllPosts();
     }
-}
 
-if ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $postController = new PostsController();
-    $postController->savePost();
-}
+} elseif ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $postsController = new PostsController();
+    $postsController->savePost();
 
-if ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $postController = new PostsController();
+} elseif ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $postsController = new PostsController();
     $id = isset($uriArray[3]) ? intval($uriArray[3]) : null;
-    $postController->updatePost($id);
-}
+    $postsController->updatePost($id);
 
-if ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $postController = new PostsController();
+} elseif ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $postsController = new PostsController();
     $id = isset($uriArray[3]) ? intval($uriArray[3]) : null;
-    $postController->deletePost($id);
+    $postsController->deletePost($id);
 }
 
 
@@ -106,7 +103,7 @@ if ($uriArray[1] === 'users-delete' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $userController->usersDeleteView();
 }
 
-if ($uriArray[1] === '' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($uri === '/' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $userController = new UserController();
     $userController->usersView();
 }
@@ -136,5 +133,3 @@ include '../public/assets/views/notFound.html';
 exit();
 
 ?>
-
-
