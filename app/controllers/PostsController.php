@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\Posts;
 
-class PostController
+class PostsController
 {
     public function validatePost($inputData) {
         $errors = [];
@@ -130,22 +130,22 @@ class PostController
     }
 
     public function postsView() {
-        include '../public/assets/views/post/posts-view.html';
+        include '../public/assets/views/posts/posts-view.html';
         exit();
     }
 
     public function postsAddView() {
-        include '../public/assets/views/post/posts-add.html';
+        include '../public/assets/views/posts/posts-add.html';
         exit();
     }
 
     public function postsDeleteView() {
-        include '../public/assets/views/post/posts-delete.html';
+        include '../public/assets/views/posts/posts-delete.html';
         exit();
     }
 
     public function postsUpdateView() {
-        include '../public/assets/views/post/posts-update.html';
+        include '../public/assets/views/posts/posts-update.html';
         exit();
     }
 }
