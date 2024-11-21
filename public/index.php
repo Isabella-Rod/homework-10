@@ -58,6 +58,7 @@ if ($uriArray[1] === 'api' && $uriArray[2] === 'users' && $_SERVER['REQUEST_METH
     $userController->deleteUser($id);
 }
 
+
 //post routes 
 if ($uriArray[1] === 'api' && $uriArray[2] === 'posts' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = isset($uriArray[3]) ? intval($uriArray[3]) : null;
