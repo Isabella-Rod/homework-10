@@ -11,9 +11,9 @@
     </head>
     <body>
         <div class="container posts-form margin-thirty">
-            <a href="http://localhost:8888/" class="link">Home</a>
+            <a href="http://localhost:8888/posts-view" class="link">Home</a>
             <h2 class="margin-thirty">Add Post</h2>
-            <form id="form-id">
+            <form id="form-id" action='#' method="post">
                 <div class="form-group margin-twenty">
                     <label for="title" id="title-label">Title</label>
                     <label id="title-error"></label>
@@ -31,6 +31,7 @@
         <script>
             $(document).ready(function () {
                 $('#form-id').on('submit', function (e) {
+                    console.log("Form submitted");
                     e.preventDefault();
                     const title = $('#title').val();
                     const content = $('#content').val();
@@ -44,7 +45,7 @@
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
-                            window.location.replace("/");
+                            window.location.replace("http://localhost:8888/posts-view");
                         },
                         error: function (data) {
                             $('#title-error').html('');
