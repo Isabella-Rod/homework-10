@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\Posts;
 
+require_once "../app/models/Posts.php"; 
+
 class PostsController
 {
     public function validatePost($inputData) {
@@ -55,19 +57,38 @@ class PostsController
     }
 
     public function getPostByID($id) {
-        $postModel = new Posts($id, $title, $content, $created_at, $updated_at);
+        if (!$id) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Post not found']);
+            exit();
+        }
+
+        $postModel = new Posts();
         header("Content-Type: application/json");
-        $posts = $postModel->getPostById($id);
-        echo json_encode($posts);
+        $post = $postModel->getPostById($id);
+        
+        if ($post) {
+            echo json_encode($post);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Post not found']);
+        }
         exit();
     }
 
+    
     public function savePost() {
         $inputData = [
             'title' => $_POST['title'] ? $_POST['title'] : false,
             'content' => $_POST['content'] ? $_POST['content'] : false,
         ];
         $postData = $this->validatePost($inputData);
+
+        $id = null; 
+        $title = $postData['title'];
+        $content = $postData['content'];
+        $created_at = date('Y-m-d H:i:s'); 
+        $updated_at = null;
 
         $post = new Posts($id, $title, $content, $created_at, $updated_at);
         $post->savePost(
@@ -98,7 +119,7 @@ class PostsController
         ];
         $postData = $this->validatePost($inputData);
 
-        $post = new Posts($id, $title, $content, $created_at, $updated_at);
+        $post = new Posts($id);
         $post->updatePost(
             [
                 'id' => $id,
@@ -116,21 +137,19 @@ class PostsController
 
     public function deletePost($id) {
         if (!$id) {
-            http_response_code(404);
+            http_response_code(400); 
+            echo json_encode(['error' => 'Post ID is required']);
             exit();
         }
-
-        $post = new Posts($id, $title, $content, $created_at, $updated_at);
-        $post->deletePost(
-            [
-                'id' => $id,
-            ]
-        );
-
-        http_response_code(200);
-        echo json_encode([
-            'success' => true
-        ]);
+    
+        $post = new Posts($id, null, null, null, null); 
+        if ($post->deletePost(['id' => $id])) {
+            http_response_code(200);
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to delete post']);
+        }
         exit();
     }
 
