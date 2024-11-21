@@ -11,7 +11,7 @@
     </head>
     <body>
         <div class="container posts-form margin-thirty">
-            <a href="http://localhost:8888/" class="link">Home</a>
+            <a href="http://localhost:8888/posts-view" class="link">Home</a>
             <div id="delete-post-container" class="margin-thirty">
                 <h2 id="post-delete">Are you sure you want to delete </h2>
                 <div id="posts-data"></div>
@@ -22,27 +22,42 @@
         <script>
             $(document).ready(function () {
                 const urlArray = window.location.pathname.split("/");
-                const id = urlArray[2];
+                const id = urlArray[2]; 
+                console.log("Extracted ID:", id); 
+
                 $.ajax({
                     url: `http://localhost:8888/api/posts/${id}`,
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
                         $('#post-delete').append(`${data.title}?`);
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Failed to load post details.");
+                        console.error("Status:", status);
+                        console.error("Error:", error);
                     }
                 });
 
-                $('#delete-button').click(function (e) {
+                $('#delete-button').click(function () {
+                    console.log(`Attempting to delete post with ID: ${id}`); 
                     $.ajax({
                         url: `http://localhost:8888/api/posts/${id}`,
                         type: "DELETE",
                         dataType: "json",
                         success: function (data) {
-                            window.location.replace("http://localhost:8888/");
+                            alert("Post deleted successfully.");
+                            window.location.replace("http://localhost:8888/posts-view");
+                        },
+                        error: function (xhr, status, error) {
+                            alert(`Failed to delete the post. Error: ${xhr.responseText}`);
+                            console.error("Status:", status);
+                            console.error("Error:", error);
                         }
                     });
                 });
             });
+
         </script>
     </body>
 </html>
