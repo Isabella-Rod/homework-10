@@ -2,23 +2,27 @@
 
 namespace app\models; 
 
-class Posts {
-    private $id;
-    private $title;
-    private $content;
-    private $created_at;
-    private $updated_at;
+use app\models\Model;
 
-    public function __construct($id, $title, $content, $created_at, $updated_at) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->content = $content;
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
-    }
+class Posts {
 
     public function getAllPosts() {
-        return [];
+        try {
+            $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
+            $sql = "SELECT * FROM posts";
+            $stmt = $db->query($sql);
+            
+            $posts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            
+            if ($posts) {
+                return $posts;
+            } else {
+                return [];
+            }
+        } catch (\PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            throw new \Exception("Failed to fetch posts.");
+        }
     }
 
     public function getId() {
@@ -67,6 +71,72 @@ class Posts {
             $data['updated_at'] ?? null
         );
     }
+
+    public function savePost($data) {
+        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
+        
+        $sql = "INSERT INTO posts (title, content, created_at) VALUES (:title, :content, :created_at)";
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':title', $data['title']);
+        $stmt->bindParam(':content', $data['content']);
+        $stmt->bindParam(':created_at', $data['created_at']);
+
+        if ($stmt->execute()) {
+            $this->id = $db->lastInsertId(); 
+            return true;
+        } else {
+            throw new \Exception('Failed to save post.');
+        }
+    }
+    
+    public function deletePost($data) {
+        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
+        $sql = "DELETE FROM posts WHERE id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id', $data['id'], \PDO::PARAM_INT);
+    
+        return $stmt->execute(); 
+    }
+
+    public function updatePost($id, $data) {
+        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
+    
+        $sql = "UPDATE posts SET title = :title, content = :content, updated_at = :updated_at WHERE id = :id";
+        $stmt = $db->prepare($sql);
+    
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->bindParam(':title', $data['title']);
+        $stmt->bindParam(':content', $data['content']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+    
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            throw new \Exception('Failed to update post.');
+        }
+    }
+
+    public function getPostById($id) {
+        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
+    
+        $sql = "SELECT * FROM posts WHERE id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+    
+        $posts = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+        if ($posts) {
+            return $posts;
+        } else {
+            throw new \Exception("Post with ID $id not found.");
+        }
+    }
+    
+    
+    
 }
+
 
 ?>
