@@ -8,7 +8,6 @@ class Posts {
 
     public function getAllPosts() {
         try {
-            $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
             $sql = "SELECT * FROM posts";
             $stmt = $db->query($sql);
             
@@ -73,8 +72,6 @@ class Posts {
     }
 
     public function savePost($data) {
-        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
-        
         $sql = "INSERT INTO posts (title, content, created_at) VALUES (:title, :content, :created_at)";
         $stmt = $db->prepare($sql);
 
@@ -91,7 +88,6 @@ class Posts {
     }
     
     public function deletePost($data) {
-        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
         $sql = "DELETE FROM posts WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':id', $data['id'], \PDO::PARAM_INT);
@@ -100,8 +96,6 @@ class Posts {
     }
 
     public function updatePost($id, $data) {
-        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
-    
         $sql = "UPDATE posts SET title = :title, content = :content, updated_at = :updated_at WHERE id = :id";
         $stmt = $db->prepare($sql);
     
@@ -118,8 +112,6 @@ class Posts {
     }
 
     public function getPostById($id) {
-        $db = new \PDO('mysql:host=localhost;dbname=homework-10-main', 'root', 'homework10');
-    
         $sql = "SELECT * FROM posts WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
